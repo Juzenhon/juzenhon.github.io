@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/hello-world/"/>
+    <url>/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>test_tag</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title></title>
+    <link href="/First/"/>
+    <url>/First/</url>
+    
+    <content type="html"><![CDATA[<p>— title: First Night — &gt; 我有一头<strong>小毛驴</strong>，可是我从来都不骑。</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>rust static详解</title>
+    <link href="/2018-11-20-rust-static/"/>
+    <url>/2018-11-20-rust-static/</url>
+    
+    <content type="html"><![CDATA[<h3 id="static-语法"><a href="#static-语法" class="headerlink" title="static 语法"></a>static 语法</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">static mut? IDENTIFER: <span class="hljs-keyword">Type</span> <span class="hljs-type">(= </span>Expresssion)?;<br></code></pre></td></tr></table></figure><p>其中mut可有可无，Expresssion为表达式，可以没有。</p><h3 id="static与常量有区别"><a href="#static与常量有区别" class="headerlink" title="static与常量有区别"></a>static与常量有区别</h3><ul><li>static有自己的内存地址，其生命周期是‘static的，常量没有</li><li>所有的对static item的引用指向同一个地址，而每个常量都有自己的地址</li><li>static的类型必须是Sync的，跨线程访问</li></ul><h3 id="mut-static"><a href="#mut-static" class="headerlink" title="mut static"></a>mut static</h3><p>如果一个static item是mut的，并发访问时可能会有问题，所以对他的引用是unsafe的。我们要自己确保他的正确性。</p><h3 id="static-变量"><a href="#static-变量" class="headerlink" title="static 变量"></a>static 变量</h3><p>按照static的语法定义变量时经常遇到这样的错误:</p><blockquote><p>calls in statics are limited to constant functions, tuple structs and tuple variants</p></blockquote><p>也就是说上面的Expresssion只是条件的。只能是常量函数，tuple结构等。而不能像Java语言一样 static Object STATIC_OBJ = new Object();</p><p>其中主要的区别在于是static的初始化必须是在编译期可确定的。也就是说其内存大小是在编译期确定的，而Java是在运行时。</p><h3 id="lazy-static"><a href="#lazy-static" class="headerlink" title="lazy_static"></a>lazy_static</h3><p>由于rust static在编译期确定大小的特性，一些rust程序员在编写代码时产生了诸多不便，就有了<a href="https://github.com/rust-lang-nursery/lazy-static.rs">lazy_static</a>这个库。</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs rust">lazy_static! &#123;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">ref</span> HASHMAP: HashMap&lt;<span class="hljs-built_in">u32</span>, &amp;<span class="hljs-symbol">&#x27;static</span> <span class="hljs-built_in">str</span>&gt; = &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> m = HashMap::new();<br>        m.insert(<span class="hljs-number">0</span>, <span class="hljs-string">&quot;foo&quot;</span>);<br>        m.insert(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;bar&quot;</span>);<br>        m.insert(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;baz&quot;</span>);<br>        m<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure><p>lazy_static是第一次使用时调用初始化，相当于把初始化挪到了运行时。</p><h3 id="lazy-mut"><a href="#lazy-mut" class="headerlink" title="lazy_mut"></a>lazy_mut</h3><p><a href="https://docs.rs/lazy_mut/0.1.0/lazy_mut/">lazy_mut</a>是用来解决变量延迟初始化的, 也包括static mut。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Rust</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>rust cell 详解</title>
+    <link href="/2018-11-02-cell/"/>
+    <url>/2018-11-02-cell/</url>
+    
+    <content type="html"><![CDATA[<h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p><a href="https://doc.rust-lang.org/std/cell/index.html">https://doc.rust-lang.org/std/cell/index.html</a></p><p>众所周知，rust的内存安全是基于一个规则，一个对像须满足以下规则：</p><ul><li>只存在一个可变引用</li><li>有多个不可变引用</li></ul><p>在写rust代码时，会发现这样的规则在写代码时会受到一定的束缚。于是rust官方出了一个可以灵活解决对像可变性问题的工具cell。</p><h2 id="cell与Mutex等的不同"><a href="#cell与Mutex等的不同" class="headerlink" title="cell与Mutex等的不同"></a>cell与Mutex等的不同</h2><p>诚然我们可以用Mutex, atomic等来解决可变性问题，但cell与mutex有本质的不同。<br>cell是线程安全的（没有实现Sync，不能跨线程访问），Mutex主要用来解决多线程数据竞争的。</p><h2 id="cell的具体分析"><a href="#cell的具体分析" class="headerlink" title="cell的具体分析"></a>cell的具体分析</h2><p>cell的实现分Cell, RefCell, UnsafeCell，还有一个开源实现LazyCell</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#[repr(transparent)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Cell</span></span>&lt;T: ?<span class="hljs-built_in">Sized</span>&gt; &#123;<br>    value: UnsafeCell&lt;T&gt;,<br>&#125;<br><br><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">RefCell</span></span>&lt;T: ?<span class="hljs-built_in">Sized</span>&gt; &#123;<br>    borrow: Cell&lt;BorrowFlag&gt;,<br>    value: UnsafeCell&lt;T&gt;,<br>&#125;<br><br><br><span class="hljs-meta">#[repr(transparent)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">UnsafeCell</span></span>&lt;T: ?<span class="hljs-built_in">Sized</span>&gt; &#123;<br>    value: T,<br>&#125;<br></code></pre></td></tr></table></figure><p>从源码上来看Cell和RefCell的内部都是由UnsafeCell来实现的, 要想理解Cell与RefCell就需要先了解UnsafeCell</p><h3 id="UnsafeCell"><a href="#UnsafeCell" class="headerlink" title="UnsafeCell"></a>UnsafeCell</h3><p>UnsafeCell非常简单，有一个重要的方法：</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">//返回一个可变指针</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; *<span class="hljs-keyword">mut</span> T &#123;<br>        <span class="hljs-keyword">self</span> <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> UnsafeCell&lt;T&gt; <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> T <span class="hljs-keyword">as</span> *<span class="hljs-keyword">mut</span> T<br>&#125;<br></code></pre></td></tr></table></figure><p>通过一个不可变对像返回一个可变的对像指针，Cell与RefCell正是利用了这个达到相应的目的，前提是他们是线程安全的。</p><h3 id="Cell"><a href="#Cell" class="headerlink" title="Cell"></a>Cell</h3><p>看一下replace,get, set, take等方法，都是基于UnsafeCell返回的可变指针的内存操作</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">replace</span></span>(&amp;<span class="hljs-keyword">self</span>, val: T) -&gt; T &#123;<br>        <span class="hljs-comment">// SAFETY: This can cause data races if called from a separate thread,</span><br>        <span class="hljs-comment">// but `Cell` is `!Sync` so this won&#x27;t happen.</span><br>        mem::replace(<span class="hljs-keyword">unsafe</span> &#123; &amp;<span class="hljs-keyword">mut</span> *<span class="hljs-keyword">self</span>.value.get() &#125;, val)<br>    &#125;<br><span class="hljs-comment">//T: Copy    </span><br><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; T &#123;<br>        <span class="hljs-comment">// SAFETY: This can cause data races if called from a separate thread,</span><br>        <span class="hljs-comment">// but `Cell` is `!Sync` so this won&#x27;t happen.</span><br>        <span class="hljs-keyword">unsafe</span> &#123; *<span class="hljs-keyword">self</span>.value.get() &#125;<br>    &#125;<br></code></pre></td></tr></table></figure><h3 id="RefCell"><a href="#RefCell" class="headerlink" title="RefCell"></a>RefCell</h3><p>Refcell是在Cell的增强版，他在Cell的基础上添加了借用，内部维护着一个借用的标识，在运行时做借用检查。</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">borrow</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; Ref&lt;<span class="hljs-symbol">&#x27;_</span>, T&gt; &#123;<br>        <span class="hljs-keyword">self</span>.try_borrow().expect(<span class="hljs-string">&quot;already mutably borrowed&quot;</span>)<br>    &#125;<br>    <br><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">borrow_mut</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; RefMut&lt;<span class="hljs-symbol">&#x27;_</span>, T&gt; &#123;<br>        <span class="hljs-keyword">self</span>.try_borrow_mut().expect(<span class="hljs-string">&quot;already borrowed&quot;</span>)<br>    &#125;<br></code></pre></td></tr></table></figure><p>主要方法borrow和borrow_mut返回相应的引用对像，当Ref或RefMut销毁时相应的借用关系消除</p><h3 id="LazyCell"><a href="#LazyCell" class="headerlink" title="LazyCell"></a>LazyCell</h3><p><a href="https://github.com/indiv0/lazycell">https://github.com/indiv0/lazycell</a>, 从代码看其和Cell功能类似，用于延迟初始化。</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">LazyCell</span></span>&lt;T&gt; &#123;<br>    inner: UnsafeCell&lt;<span class="hljs-built_in">Option</span>&lt;T&gt;&gt;,<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Rust</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>java守护线程</title>
+    <link href="/2018-2-11-daemon-thread/"/>
+    <url>/2018-2-11-daemon-thread/</url>
+    
+    <content type="html"><![CDATA[<h3 id="守护线程"><a href="#守护线程" class="headerlink" title="守护线程"></a>守护线程</h3><p>线程分为前台线程（用户线程）与后台线程（守护线程），守护线程并不常用，他主要为其他对像或用户线程提供服务。一般的守护线程如   jvm垃圾回收线程，和内存管理线程等。<br>守护线程具有最低的优先级，他不依赖于终端，但依赖于虚拟机。 而jvm的退出是以用户线程的运行结束为终止的。</p><h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lasso"><span class="hljs-keyword">Thread</span> th = <span class="hljs-literal">new</span> <span class="hljs-keyword">Thread</span>();<br>th.setDaemon(<span class="hljs-literal">true</span>); <span class="hljs-comment">//设置为守护线程</span><br></code></pre></td></tr></table></figure><p>setDaemon方法必须要在start方法之前调，否则会产生illegalThreadStateException;</p><h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>对于jre来说程序的运行结束的标志是所有前台线程的运行结束，而不管守护线程是否运行完。</p><p>当前台线程运行完成时，程序就自动终止了，因此不要在守护线程中做文件，输入输出等操作。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;<br>    Thread daemon_th =  <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;daemon thread start&quot;</span>);<br>            <span class="hljs-keyword">try</span> &#123;<br>                Thread.sleep(<span class="hljs-number">1000</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>            System.out.println(<span class="hljs-string">&quot;daemon thread finished&quot;</span>);<br>        &#125;<br>    &#125;);<br>    daemon_th.setDaemon(<span class="hljs-keyword">true</span>);<br>    Thread work_th =  <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;work thread finished&quot;</span>);<br>        &#125;<br>    &#125;);<br>    daemon_th.start();<br>    work_th.start();<br>    System.out.println(<span class="hljs-string">&quot;main thread finished&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure><p>运行结果为:<br>daemon thread start<br>work thread finished<br>main thread finished</p><h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>由于以上的特点，守护线程不适合做资源申请回收相关的操作。适合做为其他线程服务的工作。</p><p>如java的垃圾回收线程就是典型的守护线程。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Java</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>android touch处理流程</title>
+    <link href="/2013-12-24-android-touch/"/>
+    <url>/2013-12-24-android-touch/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Touch-事件简介"><a href="#Touch-事件简介" class="headerlink" title="Touch 事件简介"></a>Touch 事件简介</h3><p>在android进行ui交互时，不可避免的要涉及到touch事件，如onClick，onLongClick ,onItemClick等等事件都是经过一连串的touch形成的。</p><p>MotionEvent分为以下几个动作：<br>MotionEvent.ACTION_DOWN——–第一个手指按下的动作<br>MotionEvent.ACTION_MOVE ——–按下后的移动操作<br>MotionEvent.ACTION_POINTER_DOWN ——-第二根及以上的手指按下<br>MotionEvent.ACTION_POINTER_UP  ——–<br>MotionEvent.ACTION_UP ———–手指抬起操作，表示一次触摸操作完成<br>MotionEvent.ACTION_CANCEL     ———-DOWN目标的取消动作</p><h3 id="Touch-事件流程"><a href="#Touch-事件流程" class="headerlink" title="Touch 事件流程"></a>Touch 事件流程</h3><ul><li> 按照Touch的发生顺序，首先是Down事件，而Down事件的处理有决定作用，下图为down事件的处理：</li></ul><p><img src="/images/touchdown.png"></p><ul><li>move和up的事件处理</li></ul><p>上图中的TouchTarget我们称之为处理目标，下图为move和up事件的处理过程：</p><p><img src="/images/touchother.bmp"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Android</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  
+</search>

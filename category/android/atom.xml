@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>黑色红桃7 • Posts by &#34;android&#34; category</title>
+    <link href="http://example.com" />
+    <updated>2013-12-24T02:58:45.000Z</updated>
+    <category term="test_tag" />
+    <entry>
+        <id>http://example.com/2013-12-24-android-touch/</id>
+        <title>android touch处理流程</title>
+        <link rel="alternate" href="http://example.com/2013-12-24-android-touch/"/>
+        <content type="html">&lt;h3 id=&#34;Touch-事件简介&#34;&gt;&lt;a href=&#34;#Touch-事件简介&#34; class=&#34;headerlink&#34; title=&#34;Touch 事件简介&#34;&gt;&lt;/a&gt;Touch 事件简介&lt;/h3&gt;&lt;p&gt;在android进行ui交互时，不可避免的要涉及到touch事件，如onClick，onLongClick ,onItemClick等等事件都是经过一连串的touch形成的。&lt;/p&gt;
+&lt;p&gt;MotionEvent分为以下几个动作：&lt;br&gt;MotionEvent.ACTION_DOWN——–第一个手指按下的动作&lt;br&gt;MotionEvent.ACTION_MOVE ——–按下后的移动操作&lt;br&gt;MotionEvent.ACTION_POINTER_DOWN ——-第二根及以上的手指按下&lt;br&gt;MotionEvent.ACTION_POINTER_UP  ——–&lt;br&gt;MotionEvent.ACTION_UP ———–手指抬起操作，表示一次触摸操作完成&lt;br&gt;MotionEvent.ACTION_CANCEL     ———-DOWN目标的取消动作&lt;/p&gt;
+&lt;h3 id=&#34;Touch-事件流程&#34;&gt;&lt;a href=&#34;#Touch-事件流程&#34; class=&#34;headerlink&#34; title=&#34;Touch 事件流程&#34;&gt;&lt;/a&gt;Touch 事件流程&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt; 按照Touch的发生顺序，首先是Down事件，而Down事件的处理有决定作用，下图为down事件的处理：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/touchdown.png&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;move和up的事件处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上图中的TouchTarget我们称之为处理目标，下图为move和up事件的处理过程：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/touchother.bmp&#34;&gt;&lt;/p&gt;
+</content>
+        <updated>2013-12-24T02:58:45.000Z</updated>
+    </entry>
+</feed>
