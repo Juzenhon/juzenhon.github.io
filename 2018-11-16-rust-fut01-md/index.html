@@ -1,0 +1,600 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="朱新宏的博客">
+  <meta name="author" content="zhuxinhong">
+  <meta name="keywords" content="">
+  
+  <title>rust future0.1 - 黑色红桃7</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"0451f73cbd5a12ac989afc39ee0d08e7","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":1279826644,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="黑色红桃7" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="rust future0.1">
+              
+                rust future0.1
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-11-16 18:21" pubdate>
+        2018年11月16日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      39
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">rust future0.1</h1>
+            
+            <div class="markdown-body">
+              <h2 id="Futures介绍"><a href="#Futures介绍" class="headerlink" title="Futures介绍"></a>Futures介绍</h2><p>在实际工作中，我们会遇到一些下面的场景：一次数据查询操作，一次向server端的RPC调用，一次timeout等待，一个运行在线程池中的耗时的任务，从socket读取数据等等。<br>我们要想取得运行计算的值，可以使用同步的方法等待返回值，但会遇到一些不便，如主线程不能太耗时，线程阻塞方案实现不方便等。当同步的方式不行时，我们可以考虑异步的方式实现，futures就是一种异步实现方式。具体上说就是future抽像了异步的函数，future的值就是任务的计算结果。</p>
+<p>整个Futures库分为五个大的模块，接下来会分别介绍：</p>
+<h3 id="Future-trait"><a href="#Future-trait" class="headerlink" title="Future trait"></a>Future trait</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Future</span></span> &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Item</span></span>;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Error</span></span>;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">poll</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; Poll&lt;Self::Item, Self::Error&gt;;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">wait</span></span>(slef) -&gt; <span class="hljs-built_in">Result</span>::<span class="hljs-built_in">Result</span>&lt;Self::Item, Self::Error&gt; &#123;<br>        ...<br>    &#125;<br>    <br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>从代码中可以看到他有两个类型Item和Error,Item就是Future结束时返回值的类型。最主要的是poll方法，使用者需要实现方法复写自己的逻辑，Future通过poll不断的查询返回结果。</p>
+<ol>
+<li>  poll方法</li>
+</ol>
+<pre><code>尝试获取结果，没有获取值是返回Ok(Async::NotReady),有返回值是返回Ok(Async::Ready(Item)),错误时返回Result::Error(err)。该函数不会阻塞当前线程。
+</code></pre>
+<ol start="2">
+<li>wait方法<br> 该方法在任务完成前会阻塞当前线程，所以它不适合在event loops场景中调用。从源码分析得出的wait方法执行流程：</li>
+</ol>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs coq">graph TD<br>    A[wait] --&gt; B(Spawn::wait_future)<br>    B--&gt;C[Spawn::poll_future_notify]<br>    C--&gt;D&#123;返回结果&#125;<br>    D--&gt;|<span class="hljs-type">Ready</span>| <span class="hljs-type">D1</span>(<span class="hljs-keyword">end</span>)<br>    D--&gt;|<span class="hljs-type">NotReady</span>| <span class="hljs-type">D2</span>[Notify.park]<br>    D2--&gt;|<span class="hljs-type">外部调用notify</span>| <span class="hljs-type">C</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/task_impl/std/mod.rs.html#227-237">wait源码</a>  <a target="_blank" rel="noopener" href="https://docs.rs/crate/futures/0.1.25/source/src/task_impl/core.rs">相关代码</a></p>
+<ol start="3">
+<li>Future的转换方法<br> Future有许多的转换方法，功能都类似转换完后都会把自己消费掉，生成一个新的Future。<ul>
+<li>map</li>
+<li>map_err</li>
+<li>from_err</li>
+<li>then</li>
+<li>and_then</li>
+<li>or_else</li>
+<li>join</li>
+<li>select</li>
+<li>select2</li>
+<li>into_stream  转换成Stream</li>
+<li>flattern</li>
+<li>flatten_stream 转换成Stream</li>
+<li>fuse 完成状态后不可用的一种Future</li>
+<li>insepect 完成后会调用一个结果处理函数</li>
+<li>catch_unwind</li>
+<li>shared  多线程共享的</li>
+</ul>
+</li>
+</ol>
+<h3 id="Future的五种生成方式"><a href="#Future的五种生成方式" class="headerlink" title="Future的五种生成方式"></a>Future的五种生成方式</h3><ul>
+<li>impl <a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/future/trait.IntoFuture.html">IntoFuture</a> trait，通过into_future 方法生成Future, Reuslt,(A:IntoFuture,B,C…)与实现了Future的struct默认实现了IntoFuture trait。</li>
+<li>impl <a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/future/trait.FutureFrom.html">FutureFrom</a> trait,通过future_from方法生成Future。</li>
+<li>impl <a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/future/trait.Future.html">Future</a> trait,写具体的poll方法。</li>
+<li>通过Future的转换方法生成，可转换成不同功能的Future。</li>
+<li>通过一些库自带的方法生成Future,比如，empty, lazy, loop_fn, poll_fn, select_all, select_ok, result, ok, join_all_err等。</li>
+</ul>
+<h2 id="Sink-trait"><a href="#Sink-trait" class="headerlink" title="Sink trait"></a>Sink trait</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Sink</span></span> &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">SinkItem</span></span>;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">SinkError</span></span>;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">start_send</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, item: Self::SinkItem) -&gt; StartSend&lt;Self::SinkItem, Self::SinkError&gt;;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">poll_complete</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; Poll&lt;(), Self::SinkError&gt;;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">close</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; Poll&lt;(), Self::SinkError&gt; &#123;<br>        ...<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Sink可以理解为数据消费者，从功能上来说只接收数据，当sink满时就不再接收数据了。比如Channels,Socket,Pipes等，从一定程度上来说buffer也可以算是Sink。</p>
+<h3 id="sink的方法"><a href="#sink的方法" class="headerlink" title="sink的方法"></a>sink的方法</h3><ol>
+<li> start_send   接收发送过来的数据，数据可处理时返回AsyncSink(Ready(Item)),不可时处理返回AsyncSink(NotReady)</li>
+<li> poll_complete  flush消费掉所有缓存的数据</li>
+<li> close,关闭该sink，不再处理数据，close之后不可以再调poll_complete。</li>
+<li> wait —&gt; <a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/sink/wait.rs.html#22-59">Wait</a> 把异步的Sink转变成同步操作。</li>
+<li> with —&gt;With 处理数据时会执行一个函数</li>
+<li> with_flat_map –&gt;WithFlatMap,对每个value使用函数变成Stream,每个处理的数据为该Stream的整个值。</li>
+<li> buffer –&gt;<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/sink/buffer.rs.html#12-18">Buffer</a>，为sink做指定数量的缓存</li>
+<li> fanout –&gt; <a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/sink/struct.Fanout.html">Fanout</a>,让两个处理速度不一样的Sink操持同步。</li>
+<li> flush  转变成一个Future,当Sink poll_complet完成时为完成状态</li>
+<li> send 转变成一个Future,发送一个value到sink中并阻塞直到sink flush完成</li>
+<li> send_all 如send,发送的是一个Stream</li>
+<li> 其他转换方法</li>
+</ol>
+<h3 id="Sink的生成方式"><a href="#Sink的生成方式" class="headerlink" title="Sink的生成方式"></a>Sink的生成方式</h3><ul>
+<li>默认实现的Sink，如Vec,Box<Sink></li>
+<li>impl Sink trait写start_send,poll_complete方法</li>
+<li>通过转换方法生成</li>
+</ul>
+<h2 id="stream-trait"><a href="#stream-trait" class="headerlink" title="stream trait"></a>stream trait</h2><p>Stream代表任何的数据源或一系列顺序事件，他的行为很像是Iterator,和Future一样他不会阻塞适合于异步编程</p>
+<h3 id="Stream-方法"><a href="#Stream-方法" class="headerlink" title="Stream 方法"></a>Stream 方法</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Stream</span></span> &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Item</span></span>;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Error</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">poll</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; Poll&lt;<span class="hljs-built_in">Option</span>&lt;Self::Item&gt;, Self::Error&gt;;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol>
+<li>poll,尝试获取下一个值，如果Stream已结束返回None</li>
+<li>wait –&gt;Wait,创建一个迭代器，会阻塞当前线程直到Stream结束</li>
+<li>一些转换方法，较特殊的如collect方法生成<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/stream/collect.rs.html#13-16">Collect</a>把Stream中的值收集到一个Vector中，本身是一个Future；forward也是生成一个Future。</li>
+</ol>
+<h3 id="Stream的生成"><a href="#Stream的生成" class="headerlink" title="Stream的生成"></a>Stream的生成</h3><ol>
+<li>通过<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/future/struct.IntoStream.html">IntoStream</a> trait而来</li>
+<li>impl Stream trait写poll方法</li>
+<li>通过<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/stream/index.html">以下方法</a>生成：empty,futures_ordered,futures_unordered,iter,iter_ok,iter_result,once,poll_fn,repeat,unfold</li>
+<li>通过转换方法生成</li>
+</ol>
+<h2 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h2><p>Future代表了一个异步结果值，但开始并没有值，如何得到结果值呢。这就需要有一个机制去驱动他，这就是Executor的作用。通过executor调用Future去执行poll方法获取相应的值。但在futures这个库中只提供了相应的trait和简单的wait,notify实现。若想看线程池方案的executor实现可查点<a target="_blank" rel="noopener" href="https://docs.rs/tokio/0.1.15/tokio/">tokio库</a>。</p>
+<p>Sink与Stream最终都会转化为Future在Executor中执行。</p>
+<h3 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h3><p>一个重要的概念Task,它是一个轻量级的future的执行任务。通过<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/task/fn.current.html">current</a>函数获取当前future的Task</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs rust"><br><span class="hljs-meta">#[derive(Clone)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Task</span></span> &#123;<br>    id: <span class="hljs-built_in">usize</span>,<br>    unpark: TaskUnpark,<br>    events: UnparkEvents,<br>&#125;<br><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TaskUnpark</span></span> &#123;<br>    handle: NotifyHandle,<br>    id: <span class="hljs-built_in">usize</span>,<br>&#125;<br><br><span class="hljs-keyword">impl</span> Task&#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">notify</span></span>(&amp;<span class="hljs-keyword">self</span>) &#123;<br>        <span class="hljs-keyword">self</span>.events.notify(); -&gt; no operation<br>        <span class="hljs-keyword">self</span>.unpark.notify();-&gt;handle.notify(id)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="AtomicTask"><a href="#AtomicTask" class="headerlink" title="AtomicTask"></a><a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/task/struct.AtomicTask.html">AtomicTask</a></h3><p>它的作用是作任务通知，当计算任务完成时通知代表其异步结果的Future。再这之前必须调用register注册Future的task，每个AtomicTask只能注册一个任务。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">AtomicTask</span></span> &#123;<br>    state: AtomicUsize,<br>    task: UnsafeCell&lt;<span class="hljs-built_in">Option</span>&lt;Task&gt;&gt;,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Notify"><a href="#Notify" class="headerlink" title="Notify"></a>Notify</h3><p>   Noitfy是一个trait,用于通知executor执行future的poll方法。内部默认使用的<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/task_impl/std/mod.rs.html#227-237">ThreadNotify</a>实现。<br>   NotifyHandle是Notify的句柄，通过NotifyHandle可以在其他地方调用Notify的notify方法。</p>
+<h3 id="LocalKey"><a href="#LocalKey" class="headerlink" title="LocalKey"></a>LocalKey</h3><p>代表Task的本地变量，可通过<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/macro.task_local.html">task_local</a>生成</p>
+<h3 id="future的Wait代码分析"><a href="#future的Wait代码分析" class="headerlink" title="future的Wait代码分析"></a>future的Wait代码分析</h3><ol>
+<li>找到future的<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/future/mod.rs.html#295-300">wait</a>入口，内部调用了 <blockquote>
+<p>::executor::spawn(self).wait_future()</p>
+</blockquote>
+</li>
+<li>找到<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/task_impl/mod.rs.html#254-260">spawn</a>,里面生成了一个Spawn实例。<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">spawn</span></span>&lt;T&gt;(obj: T) -&gt; Spawn&lt;T&gt; &#123;<br>        Spawn &#123;<br>        id: fresh_task_id(),<br>        obj: obj,<br>        data: local_map(),<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>找到Spawn的<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/task_impl/std/mod.rs.html#227-237">wait_future</a>方法:<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">wait_future</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Result</span>&lt;F::Item, F::Error&gt; &#123;<br>        ThreadNotify::with_current(|notify| &#123;<br><br>            <span class="hljs-keyword">loop</span> &#123;<br>                <span class="hljs-keyword">match</span> <span class="hljs-keyword">self</span>.poll_future_notify(notify, <span class="hljs-number">0</span>)? &#123;<br>                    Async::NotReady =&gt; notify.park(),<br>                    Async::Ready(e) =&gt; <span class="hljs-keyword">return</span> <span class="hljs-literal">Ok</span>(e),<br>                &#125;<br>            &#125;<br>        &#125;)<br>    &#125;<br><br></code></pre></td></tr></table></figure>
+往下找到475行<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs rust">thread_local! &#123;<br>    <span class="hljs-keyword">static</span> CURRENT_THREAD_NOTIFY: Arc&lt;ThreadNotify&gt; = Arc::new(ThreadNotify &#123;<br>        state: AtomicUsize::new(IDLE),<br>        mutex: Mutex::new(()),<br>        condvar: Condvar::new(),<br>    &#125;);<br>&#125;<br>.....<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">with_current</span></span>&lt;F, R&gt;(f: F) -&gt; R<br>        <span class="hljs-keyword">where</span> F: <span class="hljs-built_in">FnOnce</span>(&amp;Arc&lt;ThreadNotify&gt;) -&gt; R,<br>    &#123;<br>        CURRENT_THREAD_NOTIFY.with(|notify| f(notify))<br>    &#125;<br></code></pre></td></tr></table></figure>
+相当于直接调用了一个loop循环，内部调用了poll_future_notify方法，如果返回NotReady则调用<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/task_impl/std/mod.rs.html#481-516">park</a>,阻塞了当前线程：<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs lasso">fn park(&amp;<span class="hljs-built_in">self</span>) &#123;<br>        <span class="hljs-params">...</span>.<br>        <br>        <span class="hljs-keyword">let</span> mut m = <span class="hljs-built_in">self</span>.mutex.lock().unwrap();<br><br>     <span class="hljs-params">...</span><span class="hljs-params">...</span><br>        <span class="hljs-keyword">loop</span> &#123;<br>            m = <span class="hljs-built_in">self</span>.condvar.wait(m).unwrap();<br><br>     <span class="hljs-params">...</span>..<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+进入<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/task_impl/mod.rs.html#320-327">poll_future_notify</a>方法:<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">poll_future_notify</span></span>&lt;N&gt;(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>,<br>                                notify: &amp;N,<br>                                id: <span class="hljs-built_in">usize</span>) -&gt; Poll&lt;T::Item, T::Error&gt;<br>       <span class="hljs-keyword">where</span> N: <span class="hljs-built_in">Clone</span> + <span class="hljs-built_in">Into</span>&lt;NotifyHandle&gt;,<br>             T: Future,<br>   &#123;<br>       <span class="hljs-keyword">self</span>.poll_fn_notify(notify, id, |f| f.poll())<br>   &#125;<br></code></pre></td></tr></table></figure>
+进入poll_fn_notify</li>
+</ol>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">poll_fn_notify</span></span>&lt;N, F, R&gt;(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>,<br>                             notify: &amp;N,<br>                             id: <span class="hljs-built_in">usize</span>,<br>                             f: F) -&gt; R<br>        <span class="hljs-keyword">where</span> F: <span class="hljs-built_in">FnOnce</span>(&amp;<span class="hljs-keyword">mut</span> T) -&gt; R,<br>              N: <span class="hljs-built_in">Clone</span> + <span class="hljs-built_in">Into</span>&lt;NotifyHandle&gt;,<br>    &#123;<br>        <span class="hljs-keyword">let</span> mk = || notify.clone().into();<br>        <span class="hljs-keyword">self</span>.enter(BorrowedUnpark::new(&amp;mk, id), f)<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>进入enter方法</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">enter</span></span>&lt;F, R&gt;(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, unpark: BorrowedUnpark, f: F) -&gt; R<br>        <span class="hljs-keyword">where</span> F: <span class="hljs-built_in">FnOnce</span>(&amp;<span class="hljs-keyword">mut</span> T) -&gt; R<br>    &#123;<br>        <span class="hljs-keyword">let</span> borrowed = BorrowedTask &#123;<br>            id: <span class="hljs-keyword">self</span>.id,<br>            unpark: unpark,<br>            events: BorrowedEvents::new(),<br>            map: &amp;<span class="hljs-keyword">self</span>.data,<br>        &#125;;<br>        <span class="hljs-keyword">let</span> obj = &amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>.obj;<br>        set(&amp;borrowed, || f(obj))<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>进入<a target="_blank" rel="noopener" href="https://docs.rs/crate/futures/0.1.25/source/src/task_impl/core.rs">set</a>方法</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">set</span></span>&lt;<span class="hljs-symbol">&#x27;a</span>, F, R&gt;(task: &amp;BorrowedTask&lt;<span class="hljs-symbol">&#x27;a</span>&gt;, f: F) -&gt; R<br>    <span class="hljs-keyword">where</span> F: <span class="hljs-built_in">FnOnce</span>() -&gt; R<br>&#123;<br>    <span class="hljs-keyword">let</span> set = <span class="hljs-keyword">match</span> SET.load(Relaxed) &#123;<br>        <span class="hljs-number">0</span> =&gt; <span class="hljs-built_in">panic!</span>(<span class="hljs-string">&quot;not initialized&quot;</span>),<br>        n =&gt; <span class="hljs-keyword">unsafe</span> &#123; mem::transmute::&lt;<span class="hljs-built_in">usize</span>, <span class="hljs-function"><span class="hljs-keyword">fn</span></span>(*<span class="hljs-keyword">mut</span> <span class="hljs-built_in">u8</span>)&gt;(n) &#125;,<br>    &#125;;<br><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Reset</span></span>(<span class="hljs-function"><span class="hljs-keyword">fn</span></span>(*<span class="hljs-keyword">mut</span> <span class="hljs-built_in">u8</span>), *<span class="hljs-keyword">mut</span> <span class="hljs-built_in">u8</span>);<br><br>    <span class="hljs-keyword">impl</span> <span class="hljs-built_in">Drop</span> <span class="hljs-keyword">for</span> Reset &#123;<br>        <span class="hljs-meta">#[inline]</span><br>        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">drop</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) &#123;<br>            (<span class="hljs-keyword">self</span>.<span class="hljs-number">0</span>)(<span class="hljs-keyword">self</span>.<span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">let</span> _reset = Reset(set, get_ptr().unwrap());<br>    set(task <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> _ <span class="hljs-keyword">as</span> *<span class="hljs-keyword">mut</span> <span class="hljs-built_in">u8</span>);<br>    f()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>简单调用了这个闭包，即future.poll()方法。</p>
+<p>到这里poll方法如果成功返回则就结束了，如果返回NotReady则阻塞住了，<em><strong>如何通知unpark呢？</strong></em></p>
+<p>我们注意到上面有个<a target="_blank" rel="noopener" href="https://docs.rs/crate/futures/0.1.25/source/src/task_impl/core.rs">BorrowedTask</a>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#[derive(Copy, Clone)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">BorrowedUnpark</span></span>&lt;<span class="hljs-symbol">&#x27;a</span>&gt; &#123;<br>    f: &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-built_in">Fn</span>() -&gt; NotifyHandle,<br>    id: <span class="hljs-built_in">usize</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>有一个返回<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1/src/futures/task_impl/mod.rs.html#630-632">NotifyHandle</a>的变量，下面就用到了他进行通知unpark</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span>&lt;<span class="hljs-symbol">&#x27;a</span>&gt; BorrowedUnpark&lt;<span class="hljs-symbol">&#x27;a</span>&gt; &#123;<br>    <span class="hljs-meta">#[inline]</span><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>(f: &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-built_in">Fn</span>() -&gt; NotifyHandle, id: <span class="hljs-built_in">usize</span>) -&gt; BorrowedUnpark&lt;<span class="hljs-symbol">&#x27;a</span>&gt; &#123;<br>        BorrowedUnpark &#123; f: f, id: id &#125;<br>    &#125;<br><br>    <span class="hljs-meta">#[inline]</span><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">to_owned</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; TaskUnpark &#123;<br>        <span class="hljs-keyword">let</span> handle = (<span class="hljs-keyword">self</span>.f)();<br>        <span class="hljs-keyword">let</span> id = handle.clone_id(<span class="hljs-keyword">self</span>.id);<br>        TaskUnpark &#123; handle: handle, id: id &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">impl</span> TaskUnpark &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">notify</span></span>(&amp;<span class="hljs-keyword">self</span>) &#123;<br>        <span class="hljs-keyword">self</span>.handle.notify(<span class="hljs-keyword">self</span>.id);<br>    &#125;<br><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">will_notify</span></span>(&amp;<span class="hljs-keyword">self</span>, other: &amp;BorrowedUnpark) -&gt; <span class="hljs-built_in">bool</span> &#123;<br>        <span class="hljs-keyword">self</span>.id == other.id &amp;&amp; <span class="hljs-keyword">self</span>.handle.inner == (other.f)().inner<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>所以要想通知到他就需要拿到这个task。</p>
+<h2 id="sync-模块"><a href="#sync-模块" class="headerlink" title="sync 模块"></a>sync 模块</h2><p>这个模块主要是处理future,streams和sinks使用时的同步工具，与标准库不同他不会阻塞线程，是工作在task级别。</p>
+<h3 id="mpsc"><a href="#mpsc" class="headerlink" title="mpsc"></a>mpsc</h3><p> multi-producer,single-consumer模型，FIFO queue with back pressure。主要有Sender和Receiver两个角色，通过他们很好的处理了backPressure的问题。</p>
+<h3 id="Sender-and-Receiver"><a href="#Sender-and-Receiver" class="headerlink" title="Sender and Receiver"></a>Sender and Receiver</h3><p>本质上Sender是一个Sink,Receiver是一个Stream。可通过<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/sync/mpsc/fn.channel.html">channel</a>方法生成</p>
+<h4 id="source-code"><a href="#source-code" class="headerlink" title="source code"></a><a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/sync/mpsc/mod.rs.html#639-670">source code</a></h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#[derive(Debug)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Sender</span></span>&lt;T&gt; &#123;<br>    <span class="hljs-comment">// Channel state shared between the sender and receiver.</span><br>    inner: Arc&lt;Inner&lt;T&gt;&gt;,<br><br>    <span class="hljs-comment">// Handle to the task that is blocked on this sender. This handle is sent</span><br>    <span class="hljs-comment">// to the receiver half in order to be notified when the sender becomes</span><br>    <span class="hljs-comment">// unblocked.</span><br>    sender_task: Arc&lt;Mutex&lt;SenderTask&gt;&gt;,<br><br>    <span class="hljs-comment">// True if the sender might be blocked. This is an optimization to avoid</span><br>    <span class="hljs-comment">// having to lock the mutex most of the time.</span><br>    maybe_parked: <span class="hljs-built_in">bool</span>,<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#[derive(Debug)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Receiver</span></span>&lt;T&gt; &#123;<br>    inner: Arc&lt;Inner&lt;T&gt;&gt;,<br>&#125;<br><br><span class="hljs-meta">#[derive(Debug)]</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Inner</span></span>&lt;T&gt; &#123;<br>    <span class="hljs-comment">// Max buffer size of the channel. If `None` then the channel is unbounded.</span><br>    buffer: <span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">usize</span>&gt;,<br><br>    <span class="hljs-comment">// Internal channel state. Consists of the number of messages stored in the</span><br>    <span class="hljs-comment">// channel as well as a flag signalling that the channel is closed.</span><br>    state: AtomicUsize,<br><br>    <span class="hljs-comment">// Atomic, FIFO queue used to send messages to the receiver</span><br>    message_queue: Queue&lt;<span class="hljs-built_in">Option</span>&lt;T&gt;&gt;,<br><br>    <span class="hljs-comment">// Atomic, FIFO queue used to send parked task handles to the receiver.</span><br>    parked_queue: Queue&lt;Arc&lt;Mutex&lt;SenderTask&gt;&gt;&gt;,<br><br>    <span class="hljs-comment">// Number of senders in existence</span><br>    num_senders: AtomicUsize,<br><br>    <span class="hljs-comment">// Handle to the receiver&#x27;s task.</span><br>    recv_task: Mutex&lt;ReceiverTask&gt;,<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+<p>可以看出Sender与Receiver共享了Inner部分，inner中有两个队列，一个用于存储消息，一个用于存储阻塞的发送任务。</p>
+<h4 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h4><pre><code>The steps for sending a message are roughly:
+
+1. Increment the channel message count
+2. If the channel is at capacity, push the task handle onto the wait queue
+3. Push the message onto the message queue.
+
+The steps for receiving a message are roughly:
+
+1. Pop a message from the message queue
+2. Pop a task handle from the wait queue
+3. Decrement the channel message count.
+</code></pre>
+<p>分析代码时可以以<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/sync/mpsc/mod.rs.html#923-958">Receiver的Stream trait中的poll方法</a>为入口，或者以  <a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/src/futures/sync/mpsc/mod.rs.html#643-654">Sender的Sink trait中的start_send方法</a>为入口</p>
+<h3 id="SpawnHandle"><a href="#SpawnHandle" class="headerlink" title="SpawnHandle"></a><a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/sync/mpsc/struct.SpawnHandle.html">SpawnHandle</a></h3><p> 通过<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/sync/mpsc/fn.spawn.html">spawn 方法</a>可产生一个SpawnHandle，<br> 参数<a target="_blank" rel="noopener" href="https://docs.rs/futures/0.1.25/futures/future/trait.Executor.html">executor</a>为上面提到过的Executor没有具体实现。<br> SpawnHandle是一个Stream的代理,当被drop时，Stream就不再产生数据了</p>
+<h3 id="onshot"><a href="#onshot" class="headerlink" title="onshot"></a>onshot</h3><p> 与mpsc关不多，也分为Sender和Receiver两个角色。但是Sender和Receiver本质是一个Future。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/rust/">rust</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018-11-17-rust-mio-md/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">rust mio</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018-11-02-cell/">
+                        <span class="hidden-mobile">rust cell 详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+    <!-- cnzz Analytics Icon -->
+    <span id="cnzz_stat_icon_1279826644" style="display: none"></span>
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?0451f73cbd5a12ac989afc39ee0d08e7";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <!-- cnzz Analytics -->
+    <script defer src="//s4.cnzz.com/z_stat.php?id=1279826644&show=pic"
+            type="text/javascript"></script>
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

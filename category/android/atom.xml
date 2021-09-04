@@ -3,8 +3,57 @@
     <id>http://example.com</id>
     <title>黑色红桃7 • Posts by &#34;android&#34; category</title>
     <link href="http://example.com" />
-    <updated>2013-12-24T02:58:45.000Z</updated>
-    <category term="test_tag" />
+    <updated>2015-08-11T05:19:26.000Z</updated>
+    <entry>
+        <id>http://example.com/2015-08-11-android-cmd-md/</id>
+        <title>android adb 命令</title>
+        <link rel="alternate" href="http://example.com/2015-08-11-android-cmd-md/"/>
+        <content type="html">&lt;h4 id=&#34;背景&#34;&gt;&lt;a href=&#34;#背景&#34; class=&#34;headerlink&#34; title=&#34;背景&#34;&gt;&lt;/a&gt;背景&lt;/h4&gt;&lt;p&gt;在android开发过程中，避免不了在要与机器或虚拟机打交道，为了方便调试，我们需要了解一些有用的命令。&lt;/p&gt;
+&lt;h4 id=&#34;adb-shell-dumpsys&#34;&gt;&lt;a href=&#34;#adb-shell-dumpsys&#34; class=&#34;headerlink&#34; title=&#34;adb shell dumpsys&#34;&gt;&lt;/a&gt;adb shell dumpsys&lt;/h4&gt;&lt;pre&gt;&lt;code&gt;    usage: dumpsys
+      To dump all services.
+or:
+   dumpsys [-t TIMEOUT] [--help | -l | --skip SERVICES | SERVICE [ARGS]]
+     --help: shows this help
+     -l: only list services, do not dump them
+     -t TIMEOUT: TIMEOUT to use in seconds instead of default 10 seconds
+     --skip SERVICES: dumps all services but SERVICES (comma-separated list)
+     SERVICE [ARGS]: dumps only service SERVICE, optionally passing ARGS to it
+
+SERVICE主要为：
+    dumpsys -l //可列出所有的SERVICE值
+    meminfo //显示内存信息
+    activity //显示activitiy信息（ ARGS 主要为activities,intents,services,providers等)
+    cpuinfo //显示CPU信息
+    package packagename //获取安装包信息
+    batterystats  //显示电量信息
+    window //显示键盘，窗口和它们的关系（dumpsys window lastanr)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;adb-shell-am&#34;&gt;&lt;a href=&#34;#adb-shell-am&#34; class=&#34;headerlink&#34; title=&#34;adb shell am&#34;&gt;&lt;/a&gt;adb shell am&lt;/h4&gt;&lt;pre&gt;&lt;code&gt;    am start -a android.intent.action.VIEW -d http://www.google.cn/
+    am start -n com.xxx.yyy/XActivity
+    startservice
+    startactivity
+    stopservice
+    broadcast  -a android.NET.conn.CONNECTIVITY_CHANGE
+    ……
+    stack list //堆栈信息
+    monitor //监控crash or ANR
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;adb-shell-pm&#34;&gt;&lt;a href=&#34;#adb-shell-pm&#34; class=&#34;headerlink&#34; title=&#34;adb shell pm&#34;&gt;&lt;/a&gt;adb shell pm&lt;/h4&gt;&lt;pre&gt;&lt;code&gt;    help
+    list （features | packages | libraries |  instrumentation | permissions | permission-groups）
+    resolve-activity
+    query-activities
+    query-services
+    suspend
+    query-receivers
+    clear com.xxx.xxx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;让需要输入内容的文本框获取焦点&#34;&gt;&lt;a href=&#34;#让需要输入内容的文本框获取焦点&#34; class=&#34;headerlink&#34; title=&#34;让需要输入内容的文本框获取焦点&#34;&gt;&lt;/a&gt;让需要输入内容的文本框获取焦点&lt;/h4&gt;&lt;p&gt;adb shell input text ‘HelloWorld’&lt;/p&gt;
+&lt;h4 id=&#34;查看设备中可以被调试的应用的进程号&#34;&gt;&lt;a href=&#34;#查看设备中可以被调试的应用的进程号&#34; class=&#34;headerlink&#34; title=&#34;查看设备中可以被调试的应用的进程号&#34;&gt;&lt;/a&gt;查看设备中可以被调试的应用的进程号&lt;/h4&gt;&lt;p&gt;adb jdwp&lt;/p&gt;
+&lt;h4 id=&#34;查看设备的-ip-地址&#34;&gt;&lt;a href=&#34;#查看设备的-ip-地址&#34; class=&#34;headerlink&#34; title=&#34;查看设备的 ip 地址&#34;&gt;&lt;/a&gt;查看设备的 ip 地址&lt;/h4&gt;&lt;p&gt;netcfg&lt;/p&gt;
+</content>
+        <updated>2015-08-11T05:19:26.000Z</updated>
+    </entry>
     <entry>
         <id>http://example.com/2013-12-24-android-touch/</id>
         <title>android touch处理流程</title>

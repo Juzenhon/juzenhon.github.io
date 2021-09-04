@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="朱新宏的博客">
+  <meta name="author" content="zhuxinhong">
+  <meta name="keywords" content="">
+  
+  <title>go interface{}刨析 - 黑色红桃7</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.9","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"0451f73cbd5a12ac989afc39ee0d08e7","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":1279826644,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="黑色红桃7" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="go interface{}刨析">
+              
+                go interface{}刨析
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-17 20:59" pubdate>
+        2021年4月17日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">go interface{}刨析</h1>
+            
+            <div class="markdown-body">
+              <h3 id="初识interface"><a href="#初识interface" class="headerlink" title="初识interface{}"></a>初识interface{}</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">func my<span class="hljs-constructor">Print(<span class="hljs-params">val</span> <span class="hljs-params">interface</span>&#123;&#125;)</span> &#123;<br>    fmt.<span class="hljs-constructor">Printf(<span class="hljs-string">&quot;%v&quot;</span>, <span class="hljs-params">val</span>)</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>用过java的，第一感觉interface{}与Object的差不多。</p>
+<ul>
+<li>Object是任何对象的基类，所有对象都可以转成Object</li>
+<li>interface{}，表面看是一个空接口，而golang规定是只要实现了其方法就实现了该接口。即所有类型都实现了空接口，所以interface{}可接收指针，值对像，接口类型等</li>
+</ul>
+<h3 id="interface-内部结构"><a href="#interface-内部结构" class="headerlink" title="interface{}内部结构"></a>interface{}内部结构</h3><p>我们使用interface{}，一般是通过reflect反射得到他的实际类型</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">func <span class="hljs-constructor">PrintType(<span class="hljs-params">val</span> <span class="hljs-params">interface</span>&#123;&#125;)</span> &#123;<br>    fmt.<span class="hljs-constructor">Printf(<span class="hljs-string">&quot;%s&quot;</span>, <span class="hljs-params">reflect</span>.TypeOf(<span class="hljs-params">arg</span>)</span>.<span class="hljs-constructor">String()</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>跟踪到TypeOf函数中：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TypeOf</span><span class="hljs-params">(i <span class="hljs-keyword">interface</span>&#123;&#125;)</span> <span class="hljs-title">Type</span></span> &#123;<br>	eface := *(*emptyInterface)(unsafe.Pointer(&amp;i))<br>	<span class="hljs-keyword">return</span> toType(eface.typ)<br>&#125;<br><br><span class="hljs-keyword">type</span> emptyInterface <span class="hljs-keyword">struct</span> &#123;<br>	typ  *rtype<br>	word unsafe.Pointer<br>&#125;<br><br><span class="hljs-keyword">type</span> rtype <span class="hljs-keyword">struct</span> &#123;<br>	size       <span class="hljs-keyword">uintptr</span><br>	ptrdata    <span class="hljs-keyword">uintptr</span> <span class="hljs-comment">// number of bytes in the type that can contain pointers</span><br>	hash       <span class="hljs-keyword">uint32</span>  <span class="hljs-comment">// hash of type; avoids computation in hash tables</span><br>	tflag      tflag   <span class="hljs-comment">// extra type information flags</span><br>	align      <span class="hljs-keyword">uint8</span>   <span class="hljs-comment">// alignment of variable with this type</span><br>	fieldAlign <span class="hljs-keyword">uint8</span>   <span class="hljs-comment">// alignment of struct field with this type</span><br>	kind       <span class="hljs-keyword">uint8</span>   <span class="hljs-comment">// enumeration for C</span><br>	<span class="hljs-comment">// function for comparing objects of this type</span><br>	<span class="hljs-comment">// (ptr to object A, ptr to object B) -&gt; ==?</span><br>	equal     <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(unsafe.Pointer, unsafe.Pointer)</span> <span class="hljs-title">bool</span></span><br>	gcdata    *<span class="hljs-keyword">byte</span>   <span class="hljs-comment">// garbage collection data</span><br>	str       nameOff <span class="hljs-comment">// string form</span><br>	ptrToThis typeOff <span class="hljs-comment">// type for pointer to this type, may be zero</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以发现interface{}的实际是一个emptyInterface的struct,下面做一下验证:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//模仿上面自定义的结构体</span><br><span class="hljs-keyword">type</span> emptyInterface <span class="hljs-keyword">struct</span> &#123;<br>	typ  *rtype<br>	word unsafe.Pointer<br>&#125;<br><span class="hljs-comment">//模仿上面自定义的结构体</span><br><span class="hljs-keyword">type</span> rtype <span class="hljs-keyword">struct</span> &#123;<br>	size       <span class="hljs-keyword">uintptr</span><br>	ptrdata    <span class="hljs-keyword">uintptr</span> <span class="hljs-comment">// number of bytes in the type that can contain pointers</span><br>	hash       <span class="hljs-keyword">uint32</span>  <span class="hljs-comment">// hash of type; avoids computation in hash tables</span><br>	tflag      <span class="hljs-keyword">uint8</span>   <span class="hljs-comment">// extra type information flags</span><br>	align      <span class="hljs-keyword">uint8</span>   <span class="hljs-comment">// alignment of variable with this type</span><br>	fieldAlign <span class="hljs-keyword">uint8</span>   <span class="hljs-comment">// alignment of struct field with this type</span><br>	kind       <span class="hljs-keyword">uint8</span><br>	equal     <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(unsafe.Pointer, unsafe.Pointer)</span> <span class="hljs-title">bool</span></span><br>	gcdata    *<span class="hljs-keyword">byte</span>   <span class="hljs-comment">// garbage collection data</span><br>	str       <span class="hljs-keyword">int32</span> <span class="hljs-comment">// string form</span><br>	ptrToThis <span class="hljs-keyword">int32</span> <span class="hljs-comment">// type for pointer to this type, may be zero</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">transForm</span><span class="hljs-params">(obj <span class="hljs-keyword">interface</span>&#123;&#125;)</span> *<span class="hljs-title">emptyInterface</span></span> &#123;<br>	<span class="hljs-comment">//强制类型转换</span><br>	<span class="hljs-keyword">return</span> (*emptyInterface)(unsafe.Pointer(&amp;obj))<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a <span class="hljs-keyword">uint64</span> = <span class="hljs-number">999</span><br>	e := transForm(a)<br>    fmt.Println(reflect.Kind(e.typ.kind), *(*<span class="hljs-keyword">uint64</span>)(e.word))<br>&#125;<br><br><span class="hljs-comment">//打印出来uint64 999</span><br></code></pre></td></tr></table></figure>
+<p><strong>验证了我们和猜想，可以发现interface{}的数据是一个指针，那他是如何支持值赋值的呢？如果他只是把word指向了原数据，这又和golang值传递的方式相违背</strong></p>
+<h3 id="interface-赋值过程"><a href="#interface-赋值过程" class="headerlink" title="interface{}赋值过程"></a>interface{}赋值过程</h3><p>为了搞清楚他是如何赋值的，我们写个demo一探究竟：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> TVal <span class="hljs-keyword">struct</span> &#123;<br>	a <span class="hljs-keyword">int</span><br>	b <span class="hljs-keyword">string</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printFace</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span>  &#123;<br>	fmt.Println(v)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	val := TVal&#123;a: <span class="hljs-number">1999</span>, b: <span class="hljs-string">&quot;abcdefg&quot;</span>&#125;<br>	printFace(TVal&#123;a: <span class="hljs-number">1999</span>, b: <span class="hljs-string">&quot;abcdefg&quot;</span>&#125;)<br>	printFace(&amp;val)<br>	t := <span class="hljs-number">10</span><br>	printFace(t)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>三种反汇编:</p>
+<ul>
+<li>go build –gcflags=”-l -N” -o helloworld， 去掉优化</li>
+<li>go tool compile -N -S main.go，去掉优化</li>
+<li>go tool objdump -S test &gt; abc.asm</li>
+</ul>
+<p>统一使用第二种方式。</p>
+<h4 id="值传递分析"><a href="#值传递分析" class="headerlink" title="值传递分析"></a>值传递分析</h4><p>截取 <strong>printFace(TVal{a: 1999, b: “abcdefg”})</strong> 汇编代码:</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-number">0x00c6</span> <span class="hljs-number">00198</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       PCDATA  <span class="hljs-number">$0</span>, $-<span class="hljs-number">1</span><br><span class="hljs-number">0x00c6</span> <span class="hljs-number">00198</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">XORPS</span>   X0, X0<br>//autotmp_23 可以看成是一个地址符号，基地址<span class="hljs-number">560</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x00c9</span> <span class="hljs-number">00201</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVUPS</span>  X0, <span class="hljs-string">&quot;&quot;</span>..autotmp_23+<span class="hljs-number">560</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x00d1</span> <span class="hljs-number">00209</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">$0</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_23+<span class="hljs-number">576</span>(<span class="hljs-built_in">SP</span>)<br>//把<span class="hljs-number">1999</span>赋值到地址<span class="hljs-number">560</span>(<span class="hljs-built_in">SP</span>)上<br><span class="hljs-number">0x00dd</span> <span class="hljs-number">00221</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">$1999</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_23+<span class="hljs-number">560</span>(<span class="hljs-built_in">SP</span>)<br>//字符串的地址(SB为全局变量, go<span class="hljs-number">.</span>string.<span class="hljs-string">&quot;abcdefg&quot;</span>可以看成地址符号),赋值给<span class="hljs-built_in">AX</span><br><span class="hljs-number">0x00e9</span> <span class="hljs-number">00233</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       LEAQ    go<span class="hljs-number">.</span>string.<span class="hljs-string">&quot;abcdefg&quot;</span>(SB), <span class="hljs-built_in">AX</span><br>//字符串的地址赋值给<span class="hljs-number">568</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x00f0</span> <span class="hljs-number">00240</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_23+<span class="hljs-number">568</span>(<span class="hljs-built_in">SP</span>)<br>//把字符串长度<span class="hljs-number">7</span>赋值给<span class="hljs-number">576</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x00f8</span> <span class="hljs-number">00248</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">$7</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_23+<span class="hljs-number">576</span>(<span class="hljs-built_in">SP</span>)<br>//获取struct TVal的类型元数据,<br>// autotmp_23的数据为 |<span class="hljs-number">1999</span> (8<span class="hljs-built_in">byte</span>)| str_addr (8<span class="hljs-built_in">byte</span>) | <span class="hljs-number">7</span> (8<span class="hljs-built_in">byte</span>)|,其实就是struct &#123;<span class="hljs-keyword">int</span>, stringHeader&#125;<br><span class="hljs-number">0x0104</span> <span class="hljs-number">00260</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       LEAQ    type.<span class="hljs-string">&quot;&quot;</span>.TVal(SB), <span class="hljs-built_in">AX</span><br>//TVal的类型元数据(_type)地址给<span class="hljs-built_in">SP</span><br><span class="hljs-number">0x010b</span> <span class="hljs-number">00267</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, (<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x010f</span> <span class="hljs-number">00271</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       LEAQ    <span class="hljs-string">&quot;&quot;</span>..autotmp_23+<span class="hljs-number">560</span>(<span class="hljs-built_in">SP</span>), <span class="hljs-built_in">AX</span><br>//autotmp_23地址赋值给<span class="hljs-number">8</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x0117</span> <span class="hljs-number">00279</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-number">8</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x011c</span> <span class="hljs-number">00284</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       PCDATA  <span class="hljs-number">$1</span>, <span class="hljs-number">$1</span><br><span class="hljs-number">0x011c</span> <span class="hljs-number">00284</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">NOP</span><br>//调用runtime<span class="hljs-number">.</span>convT2E，参数为(<span class="hljs-built_in">SP</span>)(*_type), <span class="hljs-number">8</span>(<span class="hljs-built_in">SP</span>)（struct &#123;<span class="hljs-keyword">int</span>, stringHeader&#125;指针）<br><span class="hljs-number">0x0120</span> <span class="hljs-number">00288</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">CALL</span>    runtime<span class="hljs-number">.</span>convT2E(SB)<br><span class="hljs-number">0x0125</span> <span class="hljs-number">00293</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">16</span>(<span class="hljs-built_in">SP</span>), <span class="hljs-built_in">AX</span><br><span class="hljs-number">0x012a</span> <span class="hljs-number">00298</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">24</span>(<span class="hljs-built_in">SP</span>), <span class="hljs-built_in">CX</span><br><span class="hljs-number">0x012f</span> <span class="hljs-number">00303</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_28+<span class="hljs-number">432</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x0137</span> <span class="hljs-number">00311</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">CX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_28+<span class="hljs-number">440</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x013f</span> <span class="hljs-number">00319</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>.v+<span class="hljs-number">224</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x0147</span> <span class="hljs-number">00327</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">14</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">CX</span>, <span class="hljs-string">&quot;&quot;</span>.v+<span class="hljs-number">232</span>(<span class="hljs-built_in">SP</span>)<br></code></pre></td></tr></table></figure>
+<p>最后调用runtime.convT2E，看一下源码:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs rust">func convT2E(t *_<span class="hljs-keyword">type</span>, elem <span class="hljs-keyword">unsafe</span>.Pointer) (e eface) &#123;<br>	<span class="hljs-keyword">if</span> raceenabled &#123;<br>		raceReadObjectPC(t, elem, getcallerpc(), funcPC(convT2E))<br>	&#125;<br>	<span class="hljs-keyword">if</span> msanenabled &#123;<br>		msanread(elem, t.size)<br>	&#125;<br>	x := mallocgc(t.size, t, <span class="hljs-literal">true</span>)<br>	<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> We allocate a zeroed object only to overwrite it with actual data.</span><br>	<span class="hljs-comment">// Figure out how to avoid zeroing. Also below in convT2Eslice, convT2I, convT2Islice.</span><br>	typedmemmove(t, x, elem)<br>	e._<span class="hljs-keyword">type</span> = t<br>	e.data = x<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">eface</span></span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>	_<span class="hljs-keyword">type</span> *_<span class="hljs-keyword">type</span><br>	data  <span class="hljs-keyword">unsafe</span>.Pointer<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>** 可以发现里面申请了一块sizeof(type)大小的内存，并初始化为elem。<br>返回值eface和前面的emptyInterface一样 **</p>
+<h4 id="指针传递分析"><a href="#指针传递分析" class="headerlink" title="指针传递分析"></a>指针传递分析</h4><p>截取 <strong>printFace(&amp;val)</strong> 汇编代码:</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-number">0x02a9</span> <span class="hljs-number">00681</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       PCDATA  <span class="hljs-number">$1</span>, $-<span class="hljs-number">1</span><br><span class="hljs-number">0x02a9</span> <span class="hljs-number">00681</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">JMP</span>     <span class="hljs-number">683</span><br>//val地址赋值给<span class="hljs-built_in">AX</span><br><span class="hljs-number">0x02ab</span> <span class="hljs-number">00683</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-string">&quot;&quot;</span>.&amp;val+<span class="hljs-number">152</span>(<span class="hljs-built_in">SP</span>), <span class="hljs-built_in">AX</span><br>//<span class="hljs-built_in">AX</span>赋值给<span class="hljs-number">144</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x02b3</span> <span class="hljs-number">00691</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_26+<span class="hljs-number">144</span>(<span class="hljs-built_in">SP</span>)<br>//struct TVal的类型元数据指针赋值给<span class="hljs-built_in">CX</span><br><span class="hljs-number">0x02bb</span> <span class="hljs-number">00699</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       LEAQ    type.*<span class="hljs-string">&quot;&quot;</span>.TVal(SB), <span class="hljs-built_in">CX</span><br>//<span class="hljs-built_in">CX</span>，即struct TVal的类型元数据指针，赋值给 <span class="hljs-number">400</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x02c2</span> <span class="hljs-number">00706</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">CX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_32+<span class="hljs-number">400</span>(<span class="hljs-built_in">SP</span>)<br>//<span class="hljs-built_in">AX</span>，即val的地址赋值给 <span class="hljs-number">408</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x02ca</span> <span class="hljs-number">00714</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_32+<span class="hljs-number">408</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x02d2</span> <span class="hljs-number">00722</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">CX</span>, <span class="hljs-string">&quot;&quot;</span>.v+<span class="hljs-number">240</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x02da</span> <span class="hljs-number">00730</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">15</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>.v+<span class="hljs-number">248</span>(<span class="hljs-built_in">SP</span>)<br></code></pre></td></tr></table></figure>
+<p>可以看出只是地址赋值操作</p>
+<h4 id="基本类型传递分析"><a href="#基本类型传递分析" class="headerlink" title="基本类型传递分析"></a>基本类型传递分析</h4><p>截取 ** printFace(t) ** 汇编代码:</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-number">0x046e</span> <span class="hljs-number">01134</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">16</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">$1999</span>, <span class="hljs-string">&quot;&quot;</span>.t+<span class="hljs-number">64</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x0477</span> <span class="hljs-number">01143</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">$1999</span>, (<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x047f</span> <span class="hljs-number">01151</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       PCDATA  <span class="hljs-number">$1</span>, <span class="hljs-number">$0</span><br><span class="hljs-number">0x047f</span> <span class="hljs-number">01151</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">NOP</span><br><span class="hljs-number">0x0480</span> <span class="hljs-number">01152</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">CALL</span>    runtime<span class="hljs-number">.</span>convT64(SB)<br><span class="hljs-number">0x0485</span> <span class="hljs-number">01157</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-number">8</span>(<span class="hljs-built_in">SP</span>), <span class="hljs-built_in">AX</span><br><span class="hljs-number">0x048a</span> <span class="hljs-number">01162</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_38+<span class="hljs-number">136</span>(<span class="hljs-built_in">SP</span>)<br>//类型元数据地址赋值是一样的<br><span class="hljs-number">0x0492</span> <span class="hljs-number">01170</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       LEAQ    type<span class="hljs-number">.</span><span class="hljs-keyword">int</span>(SB), <span class="hljs-built_in">CX</span><br><span class="hljs-number">0x0499</span> <span class="hljs-number">01177</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">CX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_37+<span class="hljs-number">384</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x04a1</span> <span class="hljs-number">01185</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>..autotmp_37+<span class="hljs-number">392</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x04a9</span> <span class="hljs-number">01193</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">CX</span>, <span class="hljs-string">&quot;&quot;</span>.v+<span class="hljs-number">224</span>(<span class="hljs-built_in">SP</span>)<br><span class="hljs-number">0x04b1</span> <span class="hljs-number">01201</span> (main<span class="hljs-number">.</span>go:<span class="hljs-number">17</span>)       <span class="hljs-keyword">MOVQ</span>    <span class="hljs-built_in">AX</span>, <span class="hljs-string">&quot;&quot;</span>.v+<span class="hljs-number">232</span>(<span class="hljs-built_in">SP</span>)<br><br>//runtime<span class="hljs-number">.</span>convT64在runtime/iface<span class="hljs-number">.</span>go下<br>func convT64(val uint64) (x unsafe<span class="hljs-number">.</span>Pointer) &#123;<br>	if val &lt; uint64(len(staticuint64s)) &#123;<br>		x = unsafe<span class="hljs-number">.</span>Pointer(&amp;staticuint64s[val])<br>	&#125; else &#123;<br>		x = mallocgc(<span class="hljs-number">8</span>, uint64Type, false)<br>		*(*uint64)(x) = val<br>	&#125;<br>	return<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在runtime/iface.go有一系列的convTXXX方法，用于不同的类型。其主要目的是为了利用缓存，避免频繁的内存分配</p>
+<ul>
+<li><strong>struct { a int}</strong> 这样的结构也适用于这种情况</li>
+<li>常量的情况，会是一个全局变量的指针赋值</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>interface{}在实际中是一个eface的结构体。</li>
+<li>interface{}更像一个包装类</li>
+<li>主要通过reflect来操作</li>
+</ul>
+<p>参考资料:<br><a target="_blank" rel="noopener" href="https://lrita.github.io/2017/12/12/golang-asm/">https://lrita.github.io/2017/12/12/golang-asm/</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/golang/">golang</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021-04-22-go-str-byte-md/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">go str与byte转换</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021-04-16-go-chan-md/">
+                        <span class="hidden-mobile">go channel</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+    <!-- cnzz Analytics Icon -->
+    <span id="cnzz_stat_icon_1279826644" style="display: none"></span>
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?0451f73cbd5a12ac989afc39ee0d08e7";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <!-- cnzz Analytics -->
+    <script defer src="//s4.cnzz.com/z_stat.php?id=1279826644&show=pic"
+            type="text/javascript"></script>
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

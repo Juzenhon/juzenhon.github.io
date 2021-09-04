@@ -7,7 +7,6 @@
         <language>zh-CN</language>
         <pubDate>Sun, 11 Feb 2018 13:06:28 +0800</pubDate>
         <lastBuildDate>Sun, 11 Feb 2018 13:06:28 +0800</lastBuildDate>
-        <category>test_tag</category>
         <item>
             <guid isPermalink="true">http://example.com/2018-2-11-daemon-thread/</guid>
             <title>java守护线程</title>

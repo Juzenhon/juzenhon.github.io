@@ -5,6 +5,14 @@
     "home_page_url": "http://example.com",
     "items": [
         {
+            "id": "http://example.com/2015-08-11-android-cmd-md/",
+            "url": "http://example.com/2015-08-11-android-cmd-md/",
+            "title": "android adb 命令",
+            "date_published": "2015-08-11T05:19:26.000Z",
+            "content_html": "<h4 id=\"背景\"><a href=\"#背景\" class=\"headerlink\" title=\"背景\"></a>背景</h4><p>在android开发过程中，避免不了在要与机器或虚拟机打交道，为了方便调试，我们需要了解一些有用的命令。</p>\n<h4 id=\"adb-shell-dumpsys\"><a href=\"#adb-shell-dumpsys\" class=\"headerlink\" title=\"adb shell dumpsys\"></a>adb shell dumpsys</h4><pre><code>    usage: dumpsys\n      To dump all services.\nor:\n   dumpsys [-t TIMEOUT] [--help | -l | --skip SERVICES | SERVICE [ARGS]]\n     --help: shows this help\n     -l: only list services, do not dump them\n     -t TIMEOUT: TIMEOUT to use in seconds instead of default 10 seconds\n     --skip SERVICES: dumps all services but SERVICES (comma-separated list)\n     SERVICE [ARGS]: dumps only service SERVICE, optionally passing ARGS to it\n\nSERVICE主要为：\n    dumpsys -l //可列出所有的SERVICE值\n    meminfo //显示内存信息\n    activity //显示activitiy信息（ ARGS 主要为activities,intents,services,providers等)\n    cpuinfo //显示CPU信息\n    package packagename //获取安装包信息\n    batterystats  //显示电量信息\n    window //显示键盘，窗口和它们的关系（dumpsys window lastanr)\n</code></pre>\n<h4 id=\"adb-shell-am\"><a href=\"#adb-shell-am\" class=\"headerlink\" title=\"adb shell am\"></a>adb shell am</h4><pre><code>    am start -a android.intent.action.VIEW -d http://www.google.cn/\n    am start -n com.xxx.yyy/XActivity\n    startservice\n    startactivity\n    stopservice\n    broadcast  -a android.NET.conn.CONNECTIVITY_CHANGE\n    ……\n    stack list //堆栈信息\n    monitor //监控crash or ANR\n    \n</code></pre>\n<h4 id=\"adb-shell-pm\"><a href=\"#adb-shell-pm\" class=\"headerlink\" title=\"adb shell pm\"></a>adb shell pm</h4><pre><code>    help\n    list （features | packages | libraries |  instrumentation | permissions | permission-groups）\n    resolve-activity\n    query-activities\n    query-services\n    suspend\n    query-receivers\n    clear com.xxx.xxx\n</code></pre>\n<h4 id=\"让需要输入内容的文本框获取焦点\"><a href=\"#让需要输入内容的文本框获取焦点\" class=\"headerlink\" title=\"让需要输入内容的文本框获取焦点\"></a>让需要输入内容的文本框获取焦点</h4><p>adb shell input text ‘HelloWorld’</p>\n<h4 id=\"查看设备中可以被调试的应用的进程号\"><a href=\"#查看设备中可以被调试的应用的进程号\" class=\"headerlink\" title=\"查看设备中可以被调试的应用的进程号\"></a>查看设备中可以被调试的应用的进程号</h4><p>adb jdwp</p>\n<h4 id=\"查看设备的-ip-地址\"><a href=\"#查看设备的-ip-地址\" class=\"headerlink\" title=\"查看设备的 ip 地址\"></a>查看设备的 ip 地址</h4><p>netcfg</p>\n",
+            "tags": []
+        },
+        {
             "id": "http://example.com/2013-12-24-android-touch/",
             "url": "http://example.com/2013-12-24-android-touch/",
             "title": "android touch处理流程",

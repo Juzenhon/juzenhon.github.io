@@ -2,35 +2,112 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://example.com/2013-12-24-android-touch/</loc>
+    <loc>http://example.com/2018-01-11-jnr/</loc>
     
-    <lastmod>2021-04-07</lastmod>
+    <lastmod>2021-09-04</lastmod>
     
   </url>
   
   <url>
-    <loc>http://example.com/2018-2-11-daemon-thread/</loc>
+    <loc>http://example.com/2017-08-17-jni/</loc>
     
-    <lastmod>2021-04-07</lastmod>
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2018-11-02-cell/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
     
   </url>
   
   <url>
     <loc>http://example.com/2018-11-20-rust-static/</loc>
     
-    <lastmod>2021-04-06</lastmod>
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013-12-24-android-touch/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021-04-23-go-dynamic-type-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2018-11-20-rust-tokio0-1/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2018-11-17-rust-mio-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2018-11-17-rust-mio-md/index.html</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2018-11-16-rust-fut01-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2015-08-11-android-cmd-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021-04-16-go-chan-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021-04-22-go-str-byte-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2018-2-11-daemon-thread/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021-04-17-go-interface-md/</loc>
+    
+    <lastmod>2021-09-04</lastmod>
     
   </url>
   
   <url>
     <loc>http://example.com/about/index.html</loc>
-    
-    <lastmod>2021-04-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2018-11-02-cell/</loc>
     
     <lastmod>2021-04-06</lastmod>
     
@@ -50,55 +127,48 @@
     
   </url>
   
-  <url>
-    <loc>http://example.com/hello-world/</loc>
-    
-    <lastmod>2021-04-04</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/First/</loc>
-    
-    <lastmod>2021-04-03</lastmod>
-    
-  </url>
-  
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
-  <url>
-    <loc>http://example.com/tags/test-tag/</loc>
-    <lastmod>2021-04-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
 
   
   <url>
-    <loc>http://example.com/categories/Android/</loc>
-    <lastmod>2021-04-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/categories/Rust/</loc>
-    <lastmod>2021-04-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://example.com/categories/Java/</loc>
-    <lastmod>2021-04-09</lastmod>
+    <lastmod>2021-09-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/golang/</loc>
+    <lastmod>2021-09-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/android/</loc>
+    <lastmod>2021-09-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/rust/</loc>
+    <lastmod>2021-09-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/JNI/</loc>
+    <lastmod>2021-09-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
